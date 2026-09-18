@@ -1,0 +1,28 @@
+<div class="j6n-segmented" role="radiogroup" aria-label="Thème d'affichage">
+  <input
+    id="theme-clair"
+    type="radio"
+    name="theme-toggle"
+    [checked]="theme.preference() === 'light'"
+    (change)="definir('light')"
+  />
+  <label for="theme-clair">Clair</label>
+
+  <input
+    id="theme-sombre"
+    type="radio"
+    name="theme-toggle"
+    [checked]="theme.preference() === 'dark'"
+    (change)="definir('dark')"
+  />
+  <label for="theme-sombre">Sombre</label>
+
+  <input
+    id="theme-auto"
+    type="radio"
+    name="theme-toggle"
+    [checked]="theme.preference() === 'auto'"
+    (change)="definir('auto')"
+  />
+  <label for="theme-auto">Auto</label>
+</div>

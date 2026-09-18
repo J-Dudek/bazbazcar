@@ -1,0 +1,235 @@
+<app-header />
+
+<main class="j6n-container j6n-stack">
+  @if (loading()) {
+    <p class="j6n-muted">Chargement…</p>
+  } @else if (erreur()) {
+    <div class="j6n-alert j6n-alert--danger" role="alert">
+      <p class="j6n-alert__body">{{ erreur() }}</p>
+    </div>
+  } @else if (evenement(); as ev) {
+    <p class="j6n-eyebrow">{{ ev.date_evenement | date: 'EEEE d MMMM y' }}</p>
+    <h1 class="j6n-card__title">{{ ev.titre }}</h1>
+    <p class="j6n-muted">{{ ev.lieu }} · RDV {{ ev.horaire_rdv.slice(0, 5) }}</p>
+
+    @if (auth.profile()?.role === 'admin') {
+      <a class="j6n-btn j6n-btn--ghost j6n-btn--sm" href="/admin/evenements/{{ ev.id }}/modifier">
+        Modifier l'événement
+      </a>
+    }
+
+    <h2 class="j6n-card__title">Trajets proposés</h2>
+    <button
+      class="j6n-btn j6n-btn--pine j6n-btn--block"
+      type="button"
+      data-j6n-modal-open="modal-proposer-trajet"
+    >
+      Proposer un trajet
+    </button>
+
+    @if (trajets().length === 0) {
+      <article class="j6n-card">
+        <p class="j6n-muted">Aucun trajet proposé pour le moment. Sois le premier !</p>
+      </article>
+    } @else {
+      <div class="j6n-stack">
+        @for (trajet of trajets(); track trajet.id) {
+          <article class="j6n-card">
+            <p class="j6n-card__meta">Départ {{ trajet.horaire_depart.slice(0, 5) }}</p>
+            <h3 class="j6n-card__title">{{ trajet.adresse_depart }}</h3>
+
+            <div class="j6n-stat">
+              <span class="j6n-stat__value"
+                >{{ trajet.places_disponibles
+                }}<span class="j6n-stat__unit"> / {{ trajet.places_totales }}</span></span
+              >
+              <span class="j6n-stat__label">places restantes</span>
+            </div>
+
+            @if (trajet.places_disponibles === 0) {
+              <span class="j6n-badge">Complet</span>
+            } @else {
+              <span class="j6n-badge j6n-badge--pine">Places dispo</span>
+            }
+
+            @if (trajet.telephone_contact) {
+              <p class="j6n-hint">Contact : {{ trajet.telephone_contact }}</p>
+            }
+
+            @if (occupants(trajet).length > 0) {
+              <p class="j6n-muted">
+                Avec
+                @for (occupant of occupants(trajet); track $index) {
+                  {{ occupant.prenom }} {{ occupant.nom }}{{ $last ? '' : ', ' }}
+                }
+              </p>
+            }
+
+            @if (estConducteur(trajet)) {
+              <button
+                class="j6n-btn j6n-btn--secondary j6n-btn--block"
+                type="button"
+                (click)="annuler(trajet)"
+              >
+                Annuler mon trajet
+              </button>
+            } @else if (estInscrit(trajet)) {
+              <button
+                class="j6n-btn j6n-btn--secondary j6n-btn--block"
+                type="button"
+                (click)="quitter(trajet)"
+              >
+                Quitter ce trajet
+              </button>
+            } @else if (trajet.places_disponibles > 0) {
+              <button
+                class="j6n-btn j6n-btn--pine j6n-btn--block"
+                type="button"
+                (click)="rejoindre(trajet)"
+              >
+                Rejoindre
+              </button>
+            }
+          </article>
+        }
+      </div>
+    }
+
+    <h2 class="j6n-card__title">Commentaires</h2>
+
+    @if (auth.profile()?.role === 'admin') {
+      @if (commentaireErreur()) {
+        <div class="j6n-alert j6n-alert--danger" role="alert">
+          <p class="j6n-alert__body">{{ commentaireErreur() }}</p>
+        </div>
+      }
+
+      <form class="j6n-stack" (ngSubmit)="posterCommentaire()">
+        <div class="j6n-field">
+          <label class="j6n-label" for="commentaire">Ajouter un commentaire</label>
+          <textarea
+            class="j6n-textarea"
+            id="commentaire"
+            name="commentaire"
+            rows="2"
+            placeholder="Une info pour les membres à propos de cet événement…"
+            [ngModel]="nouveauCommentaire()"
+            (ngModelChange)="nouveauCommentaire.set($event)"
+          ></textarea>
+        </div>
+        <button class="j6n-btn j6n-btn--pine" type="submit" [disabled]="commentaireEnCours()">
+          {{ commentaireEnCours() ? 'Envoi…' : 'Publier' }}
+        </button>
+      </form>
+    }
+
+    @if (commentaires().length === 0) {
+      <p class="j6n-muted">Aucun commentaire pour le moment.</p>
+    } @else {
+      <div class="j6n-stack">
+        @for (commentaire of commentaires(); track commentaire.id) {
+          <article class="j6n-card">
+            <p class="j6n-card__meta">
+              {{ commentaire.profiles?.prenom }} {{ commentaire.profiles?.nom }} ·
+              {{ commentaire.created_at | date: "d MMM, HH'h'mm" }}
+            </p>
+            <p>{{ commentaire.contenu }}</p>
+            @if (estAuteur(commentaire) || auth.profile()?.role === 'admin') {
+              <button
+                class="j6n-btn j6n-btn--ghost j6n-btn--sm"
+                type="button"
+                (click)="supprimerCommentaire(commentaire)"
+              >
+                Supprimer
+              </button>
+            }
+          </article>
+        }
+      </div>
+    }
+  }
+</main>
+
+<dialog id="modal-proposer-trajet" class="j6n-modal">
+  <div class="j6n-modal__header">
+    <h2 class="j6n-modal__title">Proposer un trajet</h2>
+    <button class="j6n-close" type="button" data-j6n-modal-close aria-label="Fermer">✕</button>
+  </div>
+  <div class="j6n-modal__body">
+    @if (creationErreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ creationErreur() }}</p>
+      </div>
+    }
+
+    <form class="j6n-stack" id="form-proposer-trajet" (ngSubmit)="proposer()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="adresse">Adresse de départ</label>
+        <input
+          class="j6n-input"
+          id="adresse"
+          name="adresse"
+          type="text"
+          required
+          [ngModel]="adresseDepart()"
+          (ngModelChange)="adresseDepart.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="horaire-depart">Horaire de départ</label>
+        <input
+          class="j6n-input"
+          id="horaire-depart"
+          name="horaire-depart"
+          type="time"
+          required
+          [ngModel]="horaireDepart()"
+          (ngModelChange)="horaireDepart.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="places">Nombre de places</label>
+        <input
+          class="j6n-input"
+          id="places"
+          name="places"
+          type="number"
+          min="1"
+          required
+          [ngModel]="placesTotales()"
+          (ngModelChange)="placesTotales.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="telephone">Numéro de contact (facultatif)</label>
+        <input
+          class="j6n-input"
+          id="telephone"
+          name="telephone"
+          type="tel"
+          autocomplete="tel"
+          placeholder="06 12 34 56 78"
+          [ngModel]="telephoneContact()"
+          (ngModelChange)="telephoneContact.set($event)"
+        />
+        <p class="j6n-hint">
+          Visible par les autres membres pour te contacter au sujet de ce trajet.
+        </p>
+      </div>
+    </form>
+  </div>
+  <div class="j6n-modal__footer">
+    <button class="j6n-btn j6n-btn--ghost" type="button" data-j6n-modal-close>Annuler</button>
+    <button
+      class="j6n-btn j6n-btn--pine"
+      type="submit"
+      form="form-proposer-trajet"
+      [disabled]="creationEnCours()"
+    >
+      {{ creationEnCours() ? 'Création…' : 'Proposer' }}
+    </button>
+  </div>
+</dialog>

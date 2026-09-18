@@ -1,0 +1,34 @@
+<header class="j6n-header">
+  <a class="j6n-brand" href="/">
+    <span class="j6n-brand__mark"></span>
+    bazbazcar
+  </a>
+  <button
+    class="j6n-nav__toggle j6n-btn j6n-btn--ghost j6n-btn--icon"
+    type="button"
+    data-j6n-js="menu-toggle"
+    aria-expanded="false"
+    aria-label="Ouvrir le menu"
+  >
+    ☰
+  </button>
+  <nav class="j6n-nav">
+    @if (auth.session()) {
+      @if (auth.profile()?.statut === 'valide') {
+        <a class="j6n-nav__link" href="/evenements">Événements</a>
+        @if (auth.profile()?.role === 'admin') {
+          <a class="j6n-nav__link" href="/admin/evenements/nouveau">Créer un événement</a>
+          <a class="j6n-nav__link" href="/admin/inviter">Inviter des membres</a>
+          <a class="j6n-nav__link" href="/admin/membres">Gérer les membres</a>
+          <a class="j6n-nav__link" href="/admin/statistiques">Statistiques</a>
+        }
+      }
+      <a class="j6n-nav__link" href="/mon-compte">Gérer mon compte</a>
+      <button class="j6n-btn j6n-btn--ghost" type="button" (click)="seDeconnecter()">
+        Se déconnecter
+      </button>
+    } @else {
+      <ng-content />
+    }
+  </nav>
+</header>

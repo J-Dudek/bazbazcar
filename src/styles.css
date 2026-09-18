@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Le logo de fond (.fond-logo, cf. app.css) est un peu plus visible en sombre
+   (il se noie davantage à opacité égale sur un fond foncé). Ces règles vivent
+   ici et pas dans app.css : les styles de composant Angular sont scopés
+   (attribut _ngcontent ajouté à chaque sélecteur), ce qui casse `:root`
+   puisque l'élément <html> ne porte jamais cet attribut. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .fond-logo {
+    opacity: 0.19;
+  }
+}
+:root[data-theme='dark'] .fond-logo {
+  opacity: 0.19;
+}
+
+/* Respiration verticale des pages : le <main> touchait directement le header
+   sticky en haut et le bas de la fenêtre en bas, sans aucune marge. */
+main.j6n-container {
+  padding-block: var(--j6n-space-5) var(--j6n-space-7);
+}
+@media (min-width: 640px) {
+  main.j6n-container {
+    padding-block: var(--j6n-space-6) var(--j6n-space-8);
+  }
+}
+
+/* Pages "formulaire seul" (connexion, inscription, mon compte...) : la carte ne
+   doit pas s'étirer sur toute la largeur du conteneur (1120px), sinon les champs
+   deviennent démesurés sur desktop. 480px reprend la largeur de dialog.j6n-modal. */
+.j6n-container.page-etroite {
+  max-width: 480px;
+}
+
+/* Cartes un peu plus respirantes que le défaut design-j6n, uniquement à partir
+   du moment où l'écran a la place (on garde le padding d'origine en mobile). */
+@media (min-width: 640px) {
+  .j6n-card {
+    padding: var(--j6n-space-6);
+  }
+}
+
+/* Le badge (statut d'un trajet, "En attente"...) n'a par défaut aucune marge :
+   il touchait le bloc au-dessus (ex. .j6n-stat) et le texte en dessous. */
+.j6n-badge {
+  margin-block: var(--j6n-space-2);
+}

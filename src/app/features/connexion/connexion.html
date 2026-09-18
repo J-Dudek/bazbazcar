@@ -1,0 +1,60 @@
+<app-header>
+  <a class="j6n-nav__link is-active" href="/connexion">Connexion</a>
+  <a class="j6n-nav__link" href="/inscription">Inscription</a>
+</app-header>
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    <h1 class="j6n-card__title">Se connecter</h1>
+    <p class="j6n-muted">Accède à tes trajets et aux événements de l'association.</p>
+
+    @if (erreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ erreur() }}</p>
+      </div>
+    }
+
+    <form class="j6n-stack" (ngSubmit)="submit()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="email">Email</label>
+        <input
+          class="j6n-input"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="mot-de-passe">Mot de passe</label>
+        <input
+          class="j6n-input"
+          id="mot-de-passe"
+          name="mot-de-passe"
+          type="password"
+          autocomplete="current-password"
+          required
+          [ngModel]="motDePasse()"
+          (ngModelChange)="motDePasse.set($event)"
+        />
+      </div>
+
+      <button class="j6n-btn j6n-btn--block" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Connexion…' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <p class="j6n-muted">
+      <a class="j6n-link" href="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+    </p>
+
+    <p class="j6n-muted">
+      Pas encore de compte ?
+      <a class="j6n-link" href="/inscription">Créer un compte</a>
+    </p>
+  </article>
+</main>

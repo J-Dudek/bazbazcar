@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build:netlify"
+  publish = "dist/bazbazcar-app/browser"
+
+# Angular gère le routage côté client (Router) : sans cette règle, un accès
+# direct ou un rafraîchissement sur une route comme /evenements/xxx renvoie un
+# 404 Netlify au lieu de laisser Angular la résoudre.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

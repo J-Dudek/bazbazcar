@@ -1,0 +1,16 @@
+{
+  // Formatage : Prettier au save, pour tous les types de fichiers du projet.
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Lint : retours ESLint en direct dans l'éditeur (soulignés + panneau
+  // Problems), et corrections automatiques à la sauvegarde — inclut
+  // `prettier/prettier` (cf. eslint.config.js), donc les deux retours
+  // (lint + format) arrivent par le même mécanisme.
+  "eslint.validate": ["typescript", "html"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}

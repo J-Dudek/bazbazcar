@@ -1,0 +1,49 @@
+<app-header />
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    <h1 class="j6n-card__title">Choisir un nouveau mot de passe</h1>
+
+    @if (erreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ erreur() }}</p>
+      </div>
+    }
+
+    <form class="j6n-stack" (ngSubmit)="submit()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="mot-de-passe">Nouveau mot de passe</label>
+        <input
+          class="j6n-input"
+          id="mot-de-passe"
+          name="mot-de-passe"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="6"
+          [ngModel]="motDePasse()"
+          (ngModelChange)="motDePasse.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="confirmation">Confirmer le mot de passe</label>
+        <input
+          class="j6n-input"
+          id="confirmation"
+          name="confirmation"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="6"
+          [ngModel]="confirmation()"
+          (ngModelChange)="confirmation.set($event)"
+        />
+      </div>
+
+      <button class="j6n-btn j6n-btn--block" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Enregistrement…' : 'Enregistrer le nouveau mot de passe' }}
+      </button>
+    </form>
+  </article>
+</main>

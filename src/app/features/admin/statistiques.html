@@ -1,0 +1,47 @@
+<app-header />
+
+<main class="j6n-container j6n-stack">
+  <p class="j6n-eyebrow">Administration</p>
+  <h1 class="j6n-card__title">Statistiques de covoiturage</h1>
+  <p class="j6n-muted">
+    Reflète l'état actuel : quitter un trajet ou l'annuler retire les places/inscriptions
+    correspondantes des compteurs.
+  </p>
+
+  @if (loading()) {
+    <p class="j6n-muted">Chargement…</p>
+  } @else if (erreur()) {
+    <div class="j6n-alert j6n-alert--danger" role="alert">
+      <p class="j6n-alert__body">{{ erreur() }}</p>
+    </div>
+  } @else {
+    <div class="j6n-table-wrap">
+      <table class="j6n-table" data-j6n-js="table-sort">
+        <thead>
+          <tr>
+            <th>Membre</th>
+            <th data-numeric>
+              <button class="j6n-table__sort" type="button">Trajets proposés</button>
+            </th>
+            <th data-numeric>
+              <button class="j6n-table__sort" type="button">Places proposées</button>
+            </th>
+            <th data-numeric>
+              <button class="j6n-table__sort" type="button">Trajets rejoints</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of stats(); track m.id) {
+            <tr>
+              <td>{{ m.prenom }} {{ m.nom }}</td>
+              <td data-numeric>{{ m.nb_trajets_proposes }}</td>
+              <td data-numeric>{{ m.nb_places_proposees }}</td>
+              <td data-numeric>{{ m.nb_trajets_rejoints }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

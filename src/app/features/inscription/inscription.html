@@ -1,0 +1,103 @@
+<app-header>
+  <a class="j6n-nav__link is-active" href="/inscription">Inscription</a>
+  <a class="j6n-nav__link" href="/connexion">Connexion</a>
+</app-header>
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    @if (succes()) {
+      <h1 class="j6n-card__title">Compte créé</h1>
+      <div class="j6n-alert j6n-alert--success" role="status">
+        <p class="j6n-alert__title">Vérifie tes emails</p>
+        <p class="j6n-alert__body">
+          Un lien de confirmation vient de t'être envoyé. Une fois ton adresse confirmée, un
+          administrateur validera ton compte avant que tu puisses proposer ou rejoindre des trajets.
+        </p>
+        <p class="j6n-hint">
+          Tu ne le vois pas arriver ? Pense à vérifier ton dossier spams / courriers indésirables.
+        </p>
+      </div>
+      <a class="j6n-btn j6n-btn--block" href="/connexion">Aller à la connexion</a>
+    } @else {
+      <h1 class="j6n-card__title">Créer un compte</h1>
+      <p class="j6n-muted">
+        Renseigne tes informations pour rejoindre le covoiturage de l'association.
+      </p>
+
+      @if (erreur()) {
+        <div class="j6n-alert j6n-alert--danger" role="alert">
+          <p class="j6n-alert__body">{{ erreur() }}</p>
+        </div>
+      }
+
+      <form class="j6n-stack" (ngSubmit)="submit()">
+        <div class="j6n-field">
+          <label class="j6n-label" for="prenom">Prénom</label>
+          <input
+            class="j6n-input"
+            id="prenom"
+            name="prenom"
+            type="text"
+            autocomplete="given-name"
+            required
+            [ngModel]="prenom()"
+            (ngModelChange)="prenom.set($event)"
+          />
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="nom">Nom</label>
+          <input
+            class="j6n-input"
+            id="nom"
+            name="nom"
+            type="text"
+            autocomplete="family-name"
+            required
+            [ngModel]="nom()"
+            (ngModelChange)="nom.set($event)"
+          />
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="email">Email</label>
+          <input
+            class="j6n-input"
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+          <p class="j6n-hint">Un email de confirmation te sera envoyé.</p>
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="mot-de-passe">Mot de passe</label>
+          <input
+            class="j6n-input"
+            id="mot-de-passe"
+            name="mot-de-passe"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="6"
+            [ngModel]="motDePasse()"
+            (ngModelChange)="motDePasse.set($event)"
+          />
+        </div>
+
+        <button class="j6n-btn j6n-btn--block" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Création…' : 'Créer mon compte' }}
+        </button>
+      </form>
+
+      <p class="j6n-muted">
+        Déjà un compte ?
+        <a class="j6n-link" href="/connexion">Se connecter</a>
+      </p>
+    }
+  </article>
+</main>

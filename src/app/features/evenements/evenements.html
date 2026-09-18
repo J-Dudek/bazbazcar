@@ -1,0 +1,30 @@
+<app-header />
+
+<main class="j6n-container j6n-stack">
+  <p class="j6n-eyebrow">Événements</p>
+
+  @if (loading()) {
+    <p class="j6n-muted">Chargement…</p>
+  } @else if (erreur()) {
+    <div class="j6n-alert j6n-alert--danger" role="alert">
+      <p class="j6n-alert__body">{{ erreur() }}</p>
+    </div>
+  } @else if (evenements().length === 0) {
+    <article class="j6n-card">
+      <p class="j6n-muted">Aucun événement à venir pour le moment.</p>
+    </article>
+  } @else {
+    <div class="j6n-grid">
+      @for (evenement of evenements(); track evenement.id) {
+        <a class="j6n-card j6n-card--interactive" href="/evenements/{{ evenement.id }}">
+          <p class="j6n-card__meta">{{ evenement.date_evenement | date: 'EEEE d MMMM y' }}</p>
+          <h2 class="j6n-card__title">{{ evenement.titre }}</h2>
+          <p class="j6n-muted">{{ evenement.lieu }}</p>
+          <span class="j6n-badge j6n-badge--accent"
+            >RDV {{ evenement.horaire_rdv.slice(0, 5) }}</span
+          >
+        </a>
+      }
+    </div>
+  }
+</main>

@@ -1,0 +1,25 @@
+<app-header />
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    @switch (auth.profile()?.statut) {
+      @case ('refuse') {
+        <span class="j6n-badge">Compte refusé</span>
+        <h1 class="j6n-card__title">Inscription refusée</h1>
+        <p class="j6n-muted">
+          Ton inscription n'a pas été validée par l'association. Contacte un administrateur pour
+          plus d'informations.
+        </p>
+      }
+      @default {
+        <span class="j6n-badge j6n-badge--accent">En attente</span>
+        <h1 class="j6n-card__title">Compte en attente de validation</h1>
+        <p class="j6n-muted">
+          Merci {{ auth.profile()?.prenom }}, ton adresse email est confirmée. Un administrateur de
+          l'association doit maintenant valider ton compte avant que tu puisses proposer ou
+          rejoindre des trajets.
+        </p>
+      }
+    }
+  </article>
+</main>

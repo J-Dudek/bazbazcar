@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr" data-j6n-theme="moderne">
+  <head>
+    <meta charset="utf-8" />
+    <title>bazbazcar</title>
+    <script>
+      // Applique la préférence clair/sombre stockée avant le premier rendu
+      // (évite un flash du mauvais thème). Garder en synchro avec la clé
+      // STORAGE_KEY de core/theme/theme.ts.
+      (function () {
+        try {
+          var pref = localStorage.getItem('j6n-theme');
+          if (pref === 'light' || pref === 'dark') {
+            document.documentElement.setAttribute('data-theme', pref);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#f7ebd1" />
+
+    <meta property="og:title" content="bazbazcar — le covoiturage musical" />
+    <meta property="og:description" content="Le covoiturage musical de l'association." />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/og-image.jpg" />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

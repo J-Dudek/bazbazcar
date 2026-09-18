@@ -1,0 +1,35 @@
+<app-header />
+
+<main class="j6n-container j6n-stack">
+  <p class="j6n-eyebrow">Accueil</p>
+  <h1 class="j6n-card__title">Bonjour {{ auth.profile()?.prenom }} {{ auth.profile()?.nom }}</h1>
+
+  <div class="j6n-grid">
+    <a class="j6n-card j6n-card--interactive" href="/evenements">
+      <h2 class="j6n-card__title">Événements</h2>
+      <p class="j6n-muted">Voir les événements à venir et les trajets proposés.</p>
+    </a>
+
+    @if (auth.profile()?.role === 'admin') {
+      <a class="j6n-card j6n-card--interactive" href="/admin/evenements/nouveau">
+        <h2 class="j6n-card__title">Créer un événement</h2>
+        <p class="j6n-muted">Titre, lieu, date, horaire de rendez-vous.</p>
+      </a>
+
+      <a class="j6n-card j6n-card--interactive" href="/admin/inviter">
+        <h2 class="j6n-card__title">Inviter des membres</h2>
+        <p class="j6n-muted">Ajouter un ou plusieurs comptes par email.</p>
+      </a>
+
+      <a class="j6n-card j6n-card--interactive" href="/admin/membres">
+        <h2 class="j6n-card__title">Gérer les membres</h2>
+        <p class="j6n-muted">Rôles et statuts des comptes.</p>
+      </a>
+
+      <a class="j6n-card j6n-card--interactive" href="/admin/statistiques">
+        <h2 class="j6n-card__title">Statistiques</h2>
+        <p class="j6n-muted">Places proposées, trajets rejoints.</p>
+      </a>
+    }
+  </div>
+</main>

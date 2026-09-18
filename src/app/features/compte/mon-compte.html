@@ -1,0 +1,127 @@
+<app-header />
+
+<main class="j6n-container j6n-stack page-etroite">
+  <p class="j6n-eyebrow">Mon compte</p>
+  <h1 class="j6n-card__title">Gérer mon compte</h1>
+
+  <article class="j6n-card">
+    <h2 class="j6n-card__title">Identité</h2>
+
+    @if (identiteErreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ identiteErreur() }}</p>
+      </div>
+    }
+    @if (identiteSucces()) {
+      <div class="j6n-alert j6n-alert--success" role="status">
+        <p class="j6n-alert__body">Identité mise à jour.</p>
+      </div>
+    }
+
+    <form class="j6n-stack" (ngSubmit)="enregistrerIdentite()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="prenom">Prénom</label>
+        <input
+          class="j6n-input"
+          id="prenom"
+          name="prenom"
+          type="text"
+          required
+          [ngModel]="prenom()"
+          (ngModelChange)="prenom.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="nom">Nom</label>
+        <input
+          class="j6n-input"
+          id="nom"
+          name="nom"
+          type="text"
+          required
+          [ngModel]="nom()"
+          (ngModelChange)="nom.set($event)"
+        />
+      </div>
+
+      <button class="j6n-btn j6n-btn--pine" type="submit" [disabled]="identiteEnCours()">
+        {{ identiteEnCours() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+    </form>
+  </article>
+
+  <article class="j6n-card">
+    <h2 class="j6n-card__title">Mot de passe</h2>
+
+    @if (motDePasseErreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ motDePasseErreur() }}</p>
+      </div>
+    }
+    @if (motDePasseSucces()) {
+      <div class="j6n-alert j6n-alert--success" role="status">
+        <p class="j6n-alert__body">Mot de passe mis à jour.</p>
+      </div>
+    }
+
+    <form class="j6n-stack" (ngSubmit)="changerMotDePasse()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="nouveau-mdp">Nouveau mot de passe</label>
+        <input
+          class="j6n-input"
+          id="nouveau-mdp"
+          name="nouveau-mdp"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="6"
+          [ngModel]="nouveauMotDePasse()"
+          (ngModelChange)="nouveauMotDePasse.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="confirmation-mdp">Confirmer le mot de passe</label>
+        <input
+          class="j6n-input"
+          id="confirmation-mdp"
+          name="confirmation-mdp"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="6"
+          [ngModel]="confirmationMotDePasse()"
+          (ngModelChange)="confirmationMotDePasse.set($event)"
+        />
+      </div>
+
+      <button class="j6n-btn j6n-btn--pine" type="submit" [disabled]="motDePasseEnCours()">
+        {{ motDePasseEnCours() ? 'Enregistrement…' : 'Changer le mot de passe' }}
+      </button>
+    </form>
+  </article>
+
+  <article class="j6n-card">
+    <h2 class="j6n-card__title">Zone de danger</h2>
+    <p class="j6n-muted">
+      Supprimer ton compte est définitif. Les trajets que tu as proposés sont annulés et les
+      passagers déjà inscrits en sont prévenus par email.
+    </p>
+
+    @if (suppressionErreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ suppressionErreur() }}</p>
+      </div>
+    }
+
+    <button
+      class="j6n-btn j6n-btn--secondary"
+      type="button"
+      (click)="supprimerCompte()"
+      [disabled]="suppressionEnCours()"
+    >
+      {{ suppressionEnCours() ? 'Suppression…' : 'Supprimer mon compte' }}
+    </button>
+  </article>
+</main>

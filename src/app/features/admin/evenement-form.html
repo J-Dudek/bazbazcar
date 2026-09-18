@@ -1,0 +1,102 @@
+<app-header />
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    <h1 class="j6n-card__title">
+      {{ modeEdition ? "Modifier l'événement" : 'Créer un événement' }}
+    </h1>
+
+    @if (erreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ erreur() }}</p>
+      </div>
+    }
+
+    @if (chargement()) {
+      <p class="j6n-muted">Chargement…</p>
+    } @else {
+      <form class="j6n-stack" (ngSubmit)="submit()">
+        <div class="j6n-field">
+          <label class="j6n-label" for="titre">Titre</label>
+          <input
+            class="j6n-input"
+            id="titre"
+            name="titre"
+            type="text"
+            required
+            [ngModel]="titre()"
+            (ngModelChange)="titre.set($event)"
+          />
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="lieu">Lieu</label>
+          <input
+            class="j6n-input"
+            id="lieu"
+            name="lieu"
+            type="text"
+            required
+            [ngModel]="lieu()"
+            (ngModelChange)="lieu.set($event)"
+          />
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="date">Date</label>
+          <input
+            class="j6n-input"
+            id="date"
+            name="date"
+            type="date"
+            required
+            [ngModel]="dateEvenement()"
+            (ngModelChange)="dateEvenement.set($event)"
+          />
+        </div>
+
+        <div class="j6n-field">
+          <label class="j6n-label" for="horaire">Horaire de rendez-vous</label>
+          <input
+            class="j6n-input"
+            id="horaire"
+            name="horaire"
+            type="time"
+            required
+            [ngModel]="horaireRdv()"
+            (ngModelChange)="horaireRdv.set($event)"
+          />
+        </div>
+
+        <button class="j6n-btn j6n-btn--block" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Enregistrement…' : modeEdition ? 'Enregistrer' : "Créer l'événement" }}
+        </button>
+      </form>
+    }
+  </article>
+
+  @if (modeEdition) {
+    <article class="j6n-card">
+      <h2 class="j6n-card__title">Zone de danger</h2>
+      <p class="j6n-muted">
+        Supprimer cet événement est définitif. Les trajets, inscriptions et commentaires associés
+        sont supprimés avec lui.
+      </p>
+
+      @if (suppressionErreur()) {
+        <div class="j6n-alert j6n-alert--danger" role="alert">
+          <p class="j6n-alert__body">{{ suppressionErreur() }}</p>
+        </div>
+      }
+
+      <button
+        class="j6n-btn j6n-btn--secondary"
+        type="button"
+        (click)="supprimerEvenement()"
+        [disabled]="suppressionEnCours()"
+      >
+        {{ suppressionEnCours() ? 'Suppression…' : "Supprimer l'événement" }}
+      </button>
+    </article>
+  }
+</main>

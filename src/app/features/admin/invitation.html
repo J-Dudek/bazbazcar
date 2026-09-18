@@ -1,0 +1,76 @@
+<app-header />
+
+<main class="j6n-container j6n-stack page-etroite">
+  <article class="j6n-card">
+    <h1 class="j6n-card__title">Inviter des membres</h1>
+    <p class="j6n-muted">
+      Une adresse par ligne (ou séparées par des virgules). Chaque personne reçoit un email pour
+      choisir son mot de passe ; son compte est directement validé.
+    </p>
+
+    @if (erreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ erreur() }}</p>
+      </div>
+    }
+
+    @if (resultats().length > 0) {
+      <div class="j6n-stack">
+        @for (resultat of resultats(); track resultat.email) {
+          <div
+            class="j6n-alert"
+            [class.j6n-alert--success]="resultat.success"
+            [class.j6n-alert--danger]="!resultat.success"
+          >
+            <p class="j6n-alert__body">
+              {{ resultat.email }} —
+              {{ resultat.success ? 'invitation envoyée' : resultat.error || 'échec' }}
+            </p>
+          </div>
+        }
+      </div>
+    }
+
+    <form class="j6n-stack" (ngSubmit)="submit()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="emails">Adresses email</label>
+        <textarea
+          class="j6n-textarea"
+          id="emails"
+          name="emails"
+          rows="5"
+          placeholder="marie@exemple.fr&#10;paul@exemple.fr"
+          [ngModel]="emailsTexte()"
+          (ngModelChange)="emailsTexte.set($event)"
+        ></textarea>
+      </div>
+
+      <div class="j6n-field">
+        <span class="j6n-label">Rôle attribué</span>
+        <div class="j6n-segmented" role="radiogroup" aria-label="Rôle attribué">
+          <input
+            id="role-membre"
+            type="radio"
+            name="role"
+            [checked]="role() === 'membre'"
+            (change)="role.set('membre')"
+          />
+          <label for="role-membre">Membre</label>
+
+          <input
+            id="role-admin"
+            type="radio"
+            name="role"
+            [checked]="role() === 'admin'"
+            (change)="role.set('admin')"
+          />
+          <label for="role-admin">Administrateur</label>
+        </div>
+      </div>
+
+      <button class="j6n-btn j6n-btn--pine j6n-btn--block" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Envoi…' : 'Envoyer les invitations' }}
+      </button>
+    </form>
+  </article>
+</main>

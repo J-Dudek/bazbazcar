@@ -1,0 +1,60 @@
+<app-header />
+
+<main class="j6n-container j6n-stack">
+  <p class="j6n-eyebrow">Administration</p>
+  <h1 class="j6n-card__title">Membres</h1>
+
+  @if (loading()) {
+    <p class="j6n-muted">Chargement…</p>
+  } @else if (erreur()) {
+    <div class="j6n-alert j6n-alert--danger" role="alert">
+      <p class="j6n-alert__body">{{ erreur() }}</p>
+    </div>
+  } @else {
+    <div class="j6n-table-wrap">
+      <table class="j6n-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (membre of membres(); track membre.id) {
+            <tr>
+              <td>{{ membre.prenom }} {{ membre.nom }}</td>
+              <td>{{ membre.email }}</td>
+              <td>
+                <select
+                  class="j6n-select"
+                  id="role-{{ membre.id }}"
+                  [disabled]="enCours() === membre.id"
+                  [ngModel]="membre.role"
+                  (ngModelChange)="changerRole(membre, $event)"
+                >
+                  <option value="membre">Membre</option>
+                  <option value="admin">Administrateur</option>
+                </select>
+              </td>
+              <td>
+                <select
+                  class="j6n-select"
+                  id="status-{{ membre.id }}"
+                  [disabled]="enCours() === membre.id"
+                  [ngModel]="membre.statut"
+                  (ngModelChange)="changerStatut(membre, $event)"
+                >
+                  <option value="en_attente">En attente</option>
+                  <option value="valide">Validé</option>
+                  <option value="refuse">Refusé</option>
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>
