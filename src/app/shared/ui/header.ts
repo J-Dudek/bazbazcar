@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
 
 @Component({
   selector: 'app-header',
+  imports: [RouterLink],
   templateUrl: './header.html',
 })
 export class Header {

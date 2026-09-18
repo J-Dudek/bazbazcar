@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
 import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-accueil',
-  imports: [Header],
+  imports: [RouterLink, Header],
   templateUrl: './accueil.html',
 })
 export class Accueil {

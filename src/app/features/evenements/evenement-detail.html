@@ -15,7 +15,7 @@
     @if (auth.profile()?.role === 'admin') {
       <a
         class="j6n-btn j6n-btn--secondary j6n-btn--sm"
-        href="/admin/evenements/{{ ev.id }}/modifier"
+        [routerLink]="['/admin/evenements', ev.id, 'modifier']"
       >
         Modifier l'événement
       </a>

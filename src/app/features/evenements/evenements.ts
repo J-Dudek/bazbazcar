@@ -1,12 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Evenement } from '../../shared/models/evenement';
 import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-evenements',
-  imports: [DatePipe, Header],
+  imports: [DatePipe, RouterLink, Header],
   templateUrl: './evenements.html',
 })
 export class Evenements implements OnInit {

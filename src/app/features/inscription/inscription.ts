@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
 import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-inscription',
-  imports: [FormsModule, Header],
+  imports: [FormsModule, RouterLink, Header],
   templateUrl: './inscription.html',
 })
 export class Inscription {

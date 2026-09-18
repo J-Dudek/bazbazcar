@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
 import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-mot-de-passe-oublie',
-  imports: [FormsModule, Header],
+  imports: [FormsModule, RouterLink, Header],
   templateUrl: './mot-de-passe-oublie.html',
 })
 export class MotDePasseOublie {

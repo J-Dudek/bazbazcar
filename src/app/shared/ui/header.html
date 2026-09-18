@@ -1,5 +1,5 @@
 <header class="j6n-header">
-  <a class="j6n-brand" href="/">
+  <a class="j6n-brand" routerLink="/">
     <span class="j6n-brand__mark"></span>
     bazbazcar
   </a>
@@ -15,15 +15,15 @@
   <nav class="j6n-nav">
     @if (auth.session()) {
       @if (auth.profile()?.statut === 'valide') {
-        <a class="j6n-nav__link" href="/evenements">Événements</a>
+        <a class="j6n-nav__link" routerLink="/evenements">Événements</a>
         @if (auth.profile()?.role === 'admin') {
-          <a class="j6n-nav__link" href="/admin/evenements/nouveau">Créer un événement</a>
-          <a class="j6n-nav__link" href="/admin/inviter">Inviter des membres</a>
-          <a class="j6n-nav__link" href="/admin/membres">Gérer les membres</a>
-          <a class="j6n-nav__link" href="/admin/statistiques">Statistiques</a>
+          <a class="j6n-nav__link" routerLink="/admin/evenements/nouveau">Créer un événement</a>
+          <a class="j6n-nav__link" routerLink="/admin/inviter">Inviter des membres</a>
+          <a class="j6n-nav__link" routerLink="/admin/membres">Gérer les membres</a>
+          <a class="j6n-nav__link" routerLink="/admin/statistiques">Statistiques</a>
         }
       }
-      <a class="j6n-nav__link" href="/mon-compte">Gérer mon compte</a>
+      <a class="j6n-nav__link" routerLink="/mon-compte">Gérer mon compte</a>
       <button class="j6n-btn j6n-btn--ghost" type="button" (click)="seDeconnecter()">
         Se déconnecter
       </button>

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Auth } from '../../core/auth/auth';
 import { Evenement } from '../../shared/models/evenement';
@@ -19,7 +19,7 @@ interface Occupant {
 
 @Component({
   selector: 'app-evenement-detail',
-  imports: [DatePipe, FormsModule, Header],
+  imports: [DatePipe, FormsModule, RouterLink, Header],
   templateUrl: './evenement-detail.html',
 })
 export class EvenementDetail implements OnInit {

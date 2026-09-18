@@ -1,6 +1,6 @@
 <app-header>
-  <a class="j6n-nav__link is-active" href="/inscription">Inscription</a>
-  <a class="j6n-nav__link" href="/connexion">Connexion</a>
+  <a class="j6n-nav__link is-active" routerLink="/inscription">Inscription</a>
+  <a class="j6n-nav__link" routerLink="/connexion">Connexion</a>
 </app-header>
 
 <main class="j6n-container j6n-stack page-etroite">
@@ -17,7 +17,7 @@
           Tu ne le vois pas arriver ? Pense à vérifier ton dossier spams / courriers indésirables.
         </p>
       </div>
-      <a class="j6n-btn j6n-btn--block" href="/connexion">Aller à la connexion</a>
+      <a class="j6n-btn j6n-btn--block" routerLink="/connexion">Aller à la connexion</a>
     } @else {
       <h1 class="j6n-card__title">Créer un compte</h1>
       <p class="j6n-muted">
@@ -96,7 +96,7 @@
 
       <p class="j6n-muted">
         Déjà un compte ?
-        <a class="j6n-link" href="/connexion">Se connecter</a>
+        <a class="j6n-link" routerLink="/connexion">Se connecter</a>
       </p>
     }
   </article>
