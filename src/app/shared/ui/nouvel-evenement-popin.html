@@ -1,0 +1,20 @@
+<dialog [id]="popinId" class="j6n-modal">
+  <div class="j6n-modal__header">
+    <h2 class="j6n-modal__title">Nouvel événement</h2>
+    <button class="j6n-close" type="button" data-j6n-modal-close aria-label="Fermer">✕</button>
+  </div>
+
+  @if (evenement(); as evt) {
+    <div class="j6n-modal__body">
+      <p class="j6n-eyebrow">Un nouvel événement vient d'être publié</p>
+      <h3 class="j6n-card__title">{{ evt.titre }}</h3>
+      <p class="j6n-muted">{{ evt.date_evenement | date: 'EEEE d MMMM y' }} — {{ evt.lieu }}</p>
+      <p class="j6n-muted">RDV {{ evt.horaire_rdv.slice(0, 5) }}</p>
+    </div>
+  }
+
+  <div class="j6n-modal__footer">
+    <button class="j6n-btn j6n-btn--ghost" type="button" data-j6n-modal-close>Plus tard</button>
+    <button class="j6n-btn j6n-btn--pine" type="button" (click)="voir()">Voir l'événement</button>
+  </div>
+</dialog>
