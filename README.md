@@ -188,7 +188,7 @@ supabase link --project-ref <ton-project-ref>
 supabase db push
 ```
 
-**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0017_notification_nouvel_evenement.sql`).
+**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0020_notifications_par_destinataire.sql`).
 
 ### 3. Déployer les Edge Functions
 
@@ -236,6 +236,43 @@ select vault.create_secret('re_ta_cle_resend', 'resend_api_key');
 
 Le nom `resend_api_key` doit rester exactement celui-ci, c'est ce que les fonctions SQL (`notifier_admins_nouveau_compte`, `notifier_passagers_annulation_trajet`, `notifier_membres_nouvel_evenement`) vont chercher.
 
+Ces fonctions envoient **un email par destinataire** (jamais d'adresses visibles entre membres), via l'endpoint `/emails/batch` de Resend — 100 emails par requête, découpés automatiquement au-delà. Tout texte saisi par un utilisateur (nom, adresse, titre…) est échappé avant d'être inséré dans le HTML (`echapper_html`).
+
+6. Enregistre l'adresse d'expéditeur des notifications dans le Vault, avec **le même domaine vérifié** que pour le SMTP de l'étape 3 :
+
+```sql
+select vault.create_secret('bazbazcar <notifications@tondomaine.fr>', 'email_expediteur');
+```
+
+Sans ce secret, les notifications partent de `onboarding@resend.dev` (l'expéditeur de test de Resend) : domaine partagé, non aligné sur le tien, donc **spam quasi garanti** — à ne réserver qu'au dev.
+
+#### Emails en spam : par où commencer
+
+Ouvre un message classé en spam → **Afficher l'original** (Gmail). Les lignes `SPF`, `DKIM` et `DMARC` doivent être en `PASS`, et le domaine du `From` doit être celui que tu as vérifié chez Resend. Ce qui échoue indique quoi corriger :
+
+- **SPF ou DKIM en `FAIL`/absent** : le domaine n'est pas (ou mal) vérifié — dans Resend → **Domains**, tous les enregistrements DNS doivent être au vert.
+- **DMARC absent** : ajoute un enregistrement TXT `_dmarc.tondomaine.fr` avec `v=DMARC1; p=none; rua=mailto:toi@tondomaine.fr` (à durcir plus tard).
+- **`From` en `resend.dev`, `gmail.com` ou autre domaine que le tien** : corrige le *Sender email* du SMTP Supabase (étape 3) et le secret `email_expediteur` (étape 6).
+- **Tout est en `PASS` mais ça finit quand même en spam** : domaine récent sans réputation (les premiers envois sont les pires, demande aux membres de marquer « Pas un spam »), suivi des clics/ouvertures activé côté Resend (à désactiver), ou gabarits Auth par défaut (voir [Gabarits des emails d'authentification](#gabarits-des-emails-dauthentification)).
+
+#### Gabarits des emails d'authentification
+
+Les gabarits par défaut de Supabase sont en anglais, avec un objet générique et un simple lien (« Reset your password… ») : c'est un modèle très courant dans le phishing, et Gmail le classe en spam (« semblable à des messages identifiés comme spam par le passé »), surtout depuis un domaine récent. Les versions françaises, avec le nom de l'app et une explication, sont dans `supabase/templates/` :
+
+| Fichier | Dashboard (**Authentication → Emails → Templates**) | Objet à saisir |
+|---|---|---|
+| `confirmation.html` | Confirm sign up | `Confirme ton adresse email — bazbazcar` |
+| `recovery.html` | Reset password | `Réinitialise ton mot de passe — bazbazcar` |
+| `invite.html` | Invite user | `Invitation à rejoindre bazbazcar` |
+
+Pour chacun : colle le contenu du fichier dans le champ *Message body* (mode source) et l'objet ci-dessus dans *Subject heading*, puis enregistre. Teste tout de suite avec « Mot de passe oublié » sur ton propre compte. Ces mêmes fichiers sont branchés dans `supabase/config.toml`, donc le stack local (Mailpit) les utilise après un `npm run supabase:stop && npm run supabase:start`.
+
+> ⚠️ N'utilise pas `supabase config push` pour les publier : il applique **toute** la config Auth de `config.toml` (dont `site_url` et les redirections, réglés pour le local) au projet distant, pas seulement les gabarits.
+
+Le pied de page des gabarits pointe vers `{{ .SiteURL }}` : vérifie que **Authentication → URL Configuration → Site URL** est bien l'URL de production. N'y ajoute pas de donnée saisie par l'utilisateur (`{{ .Data.prenom }}`, `{{ .Email }}`…) sans t'assurer qu'elle est échappée, pour la même raison que dans les notifications.
+
+Pense aussi à régler le **Sender name** du SMTP (**Authentication → Emails → SMTP Settings**) sur le nom de l'app : un expéditeur affiché sous un autre nom que celui de l'app que le membre connaît lui paraît inconnu, et les filtres antispam aussi.
+
 ### 6. Configurer le frontend
 
 Voir [Lancer le projet en local](#lancer-le-projet-en-local) ci-dessus pour `environment.ts`/`environment.development.ts`, avec l'URL et la clé du **nouveau** projet Supabase.
@@ -254,6 +291,7 @@ Voir [Déploiement](#déploiement) ci-dessous.
 | GitHub Actions (si CI ajoutée plus tard — Settings → Secrets and variables → Actions) | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Idem | Uniquement nécessaire si un workflow build/teste le projet ; le déploiement lui-même passe par l'intégration Git native de Netlify, pas par GitHub Actions |
 | Supabase — secrets Edge Functions | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | — | **Injectées automatiquement** par Supabase, rien à faire |
 | Supabase — Vault (SQL) | `resend_api_key` | Clé API Resend | `select vault.create_secret('...', 'resend_api_key');` dans le SQL Editor |
+| Supabase — Vault (SQL) | `email_expediteur` | Expéditeur des notifications, ex. `bazbazcar <notifications@tondomaine.fr>` (domaine vérifié chez Resend) | `select vault.create_secret('...', 'email_expediteur');` dans le SQL Editor |
 | Supabase — Auth SMTP (dashboard) | Host/port/user/password Resend | — | **Authentication → Emails → SMTP Settings** |
 
 **Ce qui ne doit jamais apparaître dans le repo** : la clé `service_role` Supabase, la clé API Resend, tout mot de passe. Le `.gitignore` exclut déjà les fichiers `environment*.ts` générés — avant chaque commit, un coup d'œil au diff sur ces zones reste une bonne habitude.

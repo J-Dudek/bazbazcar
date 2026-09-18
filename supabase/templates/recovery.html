@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Réinitialisation de ton mot de passe</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f7fbf8;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f7fbf8;">
+      <tr>
+        <td align="center" style="padding:24px 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#ffffff;border:1px solid #dbe2dd;border-radius:12px;">
+            <tr>
+              <td style="padding:32px 24px;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;color:#1a211c;">
+                <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#006921;">bazbazcar</p>
+                <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#1a211c;">Réinitialisation de ton mot de passe</h1>
+                <p style="margin:0 0 24px;">Tu as demandé à réinitialiser le mot de passe de ton compte bazbazcar, l'application de covoiturage de ton association.</p>
+                <p style="margin:0 0 24px;"><a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:12px 24px;background-color:#017f31;color:#ffffff;font-weight:600;text-decoration:none;border-radius:8px;">Choisir un nouveau mot de passe</a></p>
+                <p style="margin:0 0 24px;">Ce lien est personnel et ne peut être utilisé qu'une seule fois. Si tu n'es pas à l'origine de cette demande, ignore simplement cet email : ton mot de passe ne sera pas modifié.</p>
+                <hr style="border:0;border-top:1px solid #dbe2dd;margin:0 0 16px;">
+                <p style="margin:0 0 8px;font-size:14px;line-height:1.5;color:#646b66;">Le bouton ne fonctionne pas ? Copie ce lien dans ton navigateur :<br><span style="word-break:break-all;">{{ .ConfirmationURL }}</span></p>
+                <p style="margin:0;font-size:14px;line-height:1.5;color:#646b66;">Email envoyé automatiquement par <a href="{{ .SiteURL }}" style="color:#006921;">bazbazcar</a>, merci de ne pas y répondre.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
