@@ -188,7 +188,7 @@ supabase link --project-ref <ton-project-ref>
 supabase db push
 ```
 
-**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0021_notification_compte_active.sql`).
+**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0022_proteger_statut_et_role.sql`).
 
 ### 3. Déployer les Edge Functions
 
