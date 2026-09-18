@@ -11,6 +11,9 @@
     aria-label="Ouvrir le menu"
   >
     ☰
+    @if (enAttente() > 0) {
+      <span class="pastille-attention pastille-attention--menu" aria-hidden="true"></span>
+    }
   </button>
   <nav class="j6n-nav">
     @if (ready()) {
@@ -20,7 +23,15 @@
           @if (auth.profile()?.role === 'admin') {
             <a class="j6n-nav__link" routerLink="/admin/evenements/nouveau">Créer un événement</a>
             <a class="j6n-nav__link" routerLink="/admin/inviter">Inviter des membres</a>
-            <a class="j6n-nav__link" routerLink="/admin/membres">Gérer les membres</a>
+            <a class="j6n-nav__link" routerLink="/admin/membres">
+              <span class="avec-pastille">
+                Gérer les membres
+                @if (enAttente() > 0) {
+                  <span class="pastille-attention" aria-hidden="true"></span>
+                  <span class="j6n-sr-only"> ({{ enAttente() }} en attente d'activation)</span>
+                }
+              </span>
+            </a>
             <a class="j6n-nav__link" routerLink="/admin/statistiques">Statistiques</a>
           }
         }

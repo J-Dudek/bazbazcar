@@ -49,6 +49,35 @@ main.j6n-container {
   }
 }
 
+/* Pastille "à traiter" du header (ex. membres en attente d'activation). Couleur
+   d'état du design system : --j6n-warning est calibrée à 3:1 pour un indicateur
+   non textuel. La couleur ne porte jamais seule l'information : chaque pastille
+   est accompagnée d'un texte masqué (.j6n-sr-only) pour les lecteurs d'écran.
+   Posée en absolu, à l'angle du libellé : elle n'ajoute aucune largeur, donc
+   les autres liens du menu ne bougent pas quand elle apparaît ou disparaît. */
+.avec-pastille {
+  position: relative;
+}
+.pastille-attention {
+  position: absolute;
+  top: 0;
+  right: calc(-1 * var(--j6n-space-3));
+  width: var(--j6n-space-2);
+  height: var(--j6n-space-2);
+  border-radius: var(--j6n-radius-pill);
+  background: var(--j6n-warning);
+}
+
+/* En mobile le menu est replié : la pastille est aussi posée sur le bouton ☰
+   pour rester visible sans l'ouvrir. */
+.j6n-nav__toggle {
+  position: relative;
+}
+.pastille-attention--menu {
+  top: var(--j6n-space-2);
+  right: var(--j6n-space-2);
+}
+
 /* Le badge (statut d'un trajet, "En attente"...) n'a par défaut aucune marge :
    il touchait le bloc au-dessus (ex. .j6n-stat) et le texte en dessous. */
 .j6n-badge {

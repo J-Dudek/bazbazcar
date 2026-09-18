@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 import { Auth } from '../../core/auth/auth';
+import { MembresEnAttente } from '../../core/membres/membres-en-attente';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +12,7 @@ import { Auth } from '../../core/auth/auth';
 })
 export class Header {
   protected readonly auth = inject(Auth);
+  protected readonly enAttente = inject(MembresEnAttente).nombre;
   private readonly router = inject(Router);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

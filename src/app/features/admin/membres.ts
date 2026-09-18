@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Auth } from '../../core/auth/auth';
+import { MembresEnAttente } from '../../core/membres/membres-en-attente';
 import { Profile, Role, Statut } from '../../shared/models/profile';
 
 @Component({
@@ -12,6 +13,7 @@ import { Profile, Role, Statut } from '../../shared/models/profile';
 export class Membres implements OnInit {
   private readonly supabase = inject(SupabaseService).client;
   protected readonly auth = inject(Auth);
+  private readonly enAttente = inject(MembresEnAttente);
 
   readonly membres = signal<Profile[]>([]);
   readonly loading = signal(true);
@@ -39,6 +41,10 @@ export class Membres implements OnInit {
     }
 
     this.membres.set((data ?? []) as Profile[]);
+
+    // Une validation ou un refus change le nombre affiché dans la pastille du
+    // header, sans qu'aucune navigation ne le déclenche.
+    void this.enAttente.rafraichir();
   }
 
   async changerRole(membre: Profile, role: Role): Promise<void> {
