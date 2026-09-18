@@ -4,11 +4,15 @@ import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
+    // jsdom n'implémente pas matchMedia, que PwaInstall (popin d'installation) appelle.
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideRouter([])],
     }).compileComponents();
   });
+
+  afterEach(() => vi.unstubAllGlobals());
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);

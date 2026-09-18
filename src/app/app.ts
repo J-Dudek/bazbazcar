@@ -1,11 +1,12 @@
 import { Component, afterEveryRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './shared/ui/header';
+import { InstallationPwaPopin } from './shared/ui/installation-pwa-popin';
 import { ThemeToggle } from './shared/ui/theme-toggle';
 import { NouvelEvenementPopin } from './shared/ui/nouvel-evenement-popin';
 
 @Component({
-  imports: [RouterOutlet, Header, ThemeToggle, NouvelEvenementPopin],
+  imports: [RouterOutlet, Header, ThemeToggle, NouvelEvenementPopin, InstallationPwaPopin],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

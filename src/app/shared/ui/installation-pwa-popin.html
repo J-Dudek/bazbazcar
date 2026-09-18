@@ -1,0 +1,34 @@
+<dialog
+  [id]="popinId"
+  class="j6n-modal"
+  aria-labelledby="popin-installation-pwa-titre"
+  (close)="pwa.reporter()"
+>
+  <div class="j6n-modal__header">
+    <h2 id="popin-installation-pwa-titre" class="j6n-modal__title">Installer bazbazcar</h2>
+    <button class="j6n-close" type="button" data-j6n-modal-close aria-label="Fermer">✕</button>
+  </div>
+
+  <div class="j6n-modal__body">
+    <p>
+      Ajoute bazbazcar à ton écran d'accueil pour retrouver tes trajets en un geste, comme une vraie
+      appli.
+    </p>
+    @if (pwa.mode() === 'ios') {
+      <ol>
+        <li>
+          Touche le bouton <strong>Partager</strong> de ton navigateur (le carré avec une flèche
+          vers le haut).
+        </li>
+        <li>Choisis <strong>Sur l'écran d'accueil</strong>, puis <strong>Ajouter</strong>.</li>
+      </ol>
+    }
+  </div>
+
+  <div class="j6n-modal__footer">
+    <button class="j6n-btn j6n-btn--ghost" type="button" data-j6n-modal-close>Plus tard</button>
+    @if (pwa.mode() === 'natif') {
+      <button class="j6n-btn j6n-btn--pine" type="button" (click)="installer()">Installer</button>
+    }
+  </div>
+</dialog>

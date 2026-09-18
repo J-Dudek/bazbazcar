@@ -42,6 +42,7 @@ Application de covoiturage associatif — Angular (standalone) + Supabase (Postg
 - Thème clair / sombre / automatique (persisté par appareil)
 - Mobile-first, responsive
 - Installable en PWA (icône sur l'écran d'accueil, service worker pour le chargement hors-ligne du shell de l'app)
+- Popin d'installation proposée aux membres validés une fois connectés, tant que l'app n'est pas installée : prompt natif sur Chrome/Edge/Android, mode d'emploi sur iOS (Safari n'a pas d'API d'installation). Reportée 30 jours si le membre la ferme
 
 ## Stack technique
 
