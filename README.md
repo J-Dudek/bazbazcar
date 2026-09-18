@@ -188,7 +188,7 @@ supabase link --project-ref <ton-project-ref>
 supabase db push
 ```
 
-**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0020_notifications_par_destinataire.sql`).
+**Sans la CLI :** ouvre le **SQL Editor** du dashboard Supabase et exécute le contenu de chaque fichier de `supabase/migrations/`, du plus ancien au plus récent (`0001_schema.sql` → `0021_notification_compte_active.sql`).
 
 ### 3. Déployer les Edge Functions
 
@@ -228,13 +228,13 @@ Le fournisseur d'email intégré de Supabase est limité (quelques emails/heure,
    - Username : `resend`
    - Password : ta clé API Resend
 4. Dans **Authentication → URL Configuration**, ajoute l'URL de ton site (Netlify ou localhost pour les tests) à la liste **Redirect URLs** — nécessaire pour que les liens de confirmation, réinitialisation de mot de passe et invitation fonctionnent.
-5. Enregistre la même clé API Resend dans le **Vault** Supabase (utilisée par les notifications automatiques — nouveau compte à valider, trajet annulé) :
+5. Enregistre la même clé API Resend dans le **Vault** Supabase (utilisée par les notifications automatiques — nouveau compte à valider, compte activé, trajet annulé, nouvel événement) :
 
 ```sql
 select vault.create_secret('re_ta_cle_resend', 'resend_api_key');
 ```
 
-Le nom `resend_api_key` doit rester exactement celui-ci, c'est ce que les fonctions SQL (`notifier_admins_nouveau_compte`, `notifier_passagers_annulation_trajet`, `notifier_membres_nouvel_evenement`) vont chercher.
+Le nom `resend_api_key` doit rester exactement celui-ci, c'est ce que les fonctions SQL (`notifier_admins_nouveau_compte`, `notifier_membre_compte_active`, `notifier_passagers_annulation_trajet`, `notifier_membres_nouvel_evenement`) vont chercher.
 
 Ces fonctions envoient **un email par destinataire** (jamais d'adresses visibles entre membres), via l'endpoint `/emails/batch` de Resend — 100 emails par requête, découpés automatiquement au-delà. Tout texte saisi par un utilisateur (nom, adresse, titre…) est échappé avant d'être inséré dans le HTML (`echapper_html`).
 
