@@ -1,9 +1,10 @@
 import { Component, afterEveryRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThemeToggle } from './shared/ui/theme-toggle';
+import { NouvelEvenementPopin } from './shared/ui/nouvel-evenement-popin';
 
 @Component({
-  imports: [RouterOutlet, ThemeToggle],
+  imports: [RouterOutlet, ThemeToggle, NouvelEvenementPopin],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

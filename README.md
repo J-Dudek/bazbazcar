@@ -31,6 +31,7 @@ Application de covoiturage associatif — Angular (standalone) + Supabase (Postg
 - La liste des passagers déjà inscrits est visible sur chaque trajet
 - Le conducteur peut annuler son trajet — les passagers inscrits sont alors prévenus automatiquement par email
 - Commentaires sur un événement, réservés en écriture aux administrateurs (lecture ouverte à tous les membres validés)
+- Popin temps réel (Supabase Realtime) affichée aux membres déjà connectés dès qu'un nouvel événement est publié — en plus de l'email, pas à sa place
 
 **Espace admin**
 - Gestion des membres : changer le rôle (membre/admin) et le statut (en attente/validé/refusé) de n'importe quel compte
@@ -40,14 +41,15 @@ Application de covoiturage associatif — Angular (standalone) + Supabase (Postg
 **Divers**
 - Thème clair / sombre / automatique (persisté par appareil)
 - Mobile-first, responsive
+- Installable en PWA (icône sur l'écran d'accueil, service worker pour le chargement hors-ligne du shell de l'app)
 
 ## Stack technique
 
 | Brique | Choix |
 |---|---|
-| Frontend | Angular 22 (standalone components, signals) |
+| Frontend | Angular 22 (standalone components, signals), PWA (`@angular/service-worker`) |
 | Design system | [design-j6n](https://github.com/J-Dudek/design-j6n) (`theme.css` + `theme.js`) |
-| Backend / BDD | Supabase (Postgres + Auth + Row Level Security + Edge Functions + Vault) |
+| Backend / BDD | Supabase (Postgres + Auth + Row Level Security + Realtime + Edge Functions + Vault) |
 | Email transactionnel | Resend, via SMTP (emails d'auth) et API directe (notifications métier, appelée depuis Postgres via `pg_net`) |
 | Hébergement frontend | Netlify |
 | Tests | Vitest |

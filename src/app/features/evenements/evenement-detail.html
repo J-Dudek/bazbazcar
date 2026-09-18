@@ -13,7 +13,10 @@
     <p class="j6n-muted">{{ ev.lieu }} · RDV {{ ev.horaire_rdv.slice(0, 5) }}</p>
 
     @if (auth.profile()?.role === 'admin') {
-      <a class="j6n-btn j6n-btn--ghost j6n-btn--sm" href="/admin/evenements/{{ ev.id }}/modifier">
+      <a
+        class="j6n-btn j6n-btn--secondary j6n-btn--sm"
+        href="/admin/evenements/{{ ev.id }}/modifier"
+      >
         Modifier l'événement
       </a>
     }
