@@ -2,11 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-connexion',
-  imports: [FormsModule, RouterLink, Header],
+  imports: [FormsModule, RouterLink],
   templateUrl: './connexion.html',
 })
 export class Connexion {

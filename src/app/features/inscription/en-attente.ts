@@ -1,11 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-en-attente',
-  imports: [Header],
   templateUrl: './en-attente.html',
 })
 export class EnAttente implements OnInit {

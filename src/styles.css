@@ -14,6 +14,15 @@
   opacity: 0.19;
 }
 
+/* Logo de l'association dans le header, à la place du rond .j6n-brand__mark du
+   design system. Même fichier que le fond de page (.fond-logo) : une seule
+   requête. `alt` vide : le lien porte déjà le nom « bazbazcar » en texte. */
+.brand-logo {
+  height: var(--j6n-space-7);
+  width: auto;
+  flex: none;
+}
+
 /* Respiration verticale des pages : le <main> touchait directement le header
    sticky en haut et le bas de la fenêtre en bas, sans aucune marge. */
 main.j6n-container {

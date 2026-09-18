@@ -4,11 +4,10 @@ import { Router } from '@angular/router';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Auth } from '../../core/auth/auth';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-mon-compte',
-  imports: [FormsModule, Header],
+  imports: [FormsModule],
   templateUrl: './mon-compte.html',
 })
 export class MonCompte {

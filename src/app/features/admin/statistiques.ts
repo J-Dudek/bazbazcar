@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { SupabaseService } from '../../core/supabase/supabase.service';
-import { Header } from '../../shared/ui/header';
 
 interface StatMembre {
   id: string;
@@ -13,7 +12,6 @@ interface StatMembre {
 
 @Component({
   selector: 'app-statistiques',
-  imports: [Header],
   templateUrl: './statistiques.html',
 })
 export class Statistiques implements OnInit {

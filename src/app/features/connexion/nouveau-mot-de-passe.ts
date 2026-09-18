@@ -2,11 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-nouveau-mot-de-passe',
-  imports: [FormsModule, Header],
+  imports: [FormsModule],
   templateUrl: './nouveau-mot-de-passe.html',
 })
 export class NouveauMotDePasse {

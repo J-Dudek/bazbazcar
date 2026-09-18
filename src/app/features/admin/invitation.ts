@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Role } from '../../shared/models/profile';
-import { Header } from '../../shared/ui/header';
 
 interface InviteResult {
   email: string;
@@ -13,7 +12,7 @@ interface InviteResult {
 
 @Component({
   selector: 'app-invitation',
-  imports: [FormsModule, Header],
+  imports: [FormsModule],
   templateUrl: './invitation.html',
 })
 export class Invitation {

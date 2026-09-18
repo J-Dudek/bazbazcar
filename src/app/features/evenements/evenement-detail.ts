@@ -7,7 +7,6 @@ import { Auth } from '../../core/auth/auth';
 import { Evenement } from '../../shared/models/evenement';
 import { Trajet } from '../../shared/models/trajet';
 import { Commentaire } from '../../shared/models/commentaire';
-import { Header } from '../../shared/ui/header';
 
 const MODAL_PROPOSER = 'modal-proposer-trajet';
 
@@ -19,7 +18,7 @@ interface Occupant {
 
 @Component({
   selector: 'app-evenement-detail',
-  imports: [DatePipe, FormsModule, RouterLink, Header],
+  imports: [DatePipe, FormsModule, RouterLink],
   templateUrl: './evenement-detail.html',
 })
 export class EvenementDetail implements OnInit {

@@ -3,11 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Auth } from '../../core/auth/auth';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-evenement-form',
-  imports: [FormsModule, Header],
+  imports: [FormsModule],
   templateUrl: './evenement-form.html',
 })
 export class EvenementForm implements OnInit {

@@ -3,11 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 import { Auth } from '../../core/auth/auth';
 import { Profile, Role, Statut } from '../../shared/models/profile';
-import { Header } from '../../shared/ui/header';
 
 @Component({
   selector: 'app-membres',
-  imports: [FormsModule, Header],
+  imports: [FormsModule],
   templateUrl: './membres.html',
 })
 export class Membres implements OnInit {
