@@ -69,7 +69,10 @@ export class Auth {
   }
 
   async signOut(): Promise<void> {
-    await this.supabase.auth.signOut();
+    // `local` : ne ferme que la session de cet appareil. Le défaut de supabase-js
+    // (`global`) déconnecterait aussi le membre de tous ses autres appareils,
+    // y compris l'app installée (PWA) sur son téléphone.
+    await this.supabase.auth.signOut({ scope: 'local' });
   }
 
   async resetPasswordForEmail(email: string): Promise<{ error: string | null }> {
