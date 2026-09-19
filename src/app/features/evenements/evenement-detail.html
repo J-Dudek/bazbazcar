@@ -73,6 +73,13 @@
               <button
                 class="j6n-btn j6n-btn--secondary j6n-btn--block"
                 type="button"
+                (click)="ouvrirEdition(trajet)"
+              >
+                Modifier mon trajet
+              </button>
+              <button
+                class="j6n-btn j6n-btn--ghost j6n-btn--block"
+                type="button"
                 (click)="annuler(trajet)"
               >
                 Annuler mon trajet
@@ -234,6 +241,76 @@
       [disabled]="creationEnCours()"
     >
       {{ creationEnCours() ? 'Création…' : 'Proposer' }}
+    </button>
+  </div>
+</dialog>
+
+<dialog id="modal-modifier-trajet" class="j6n-modal">
+  <div class="j6n-modal__header">
+    <h2 class="j6n-modal__title">Modifier mon trajet</h2>
+    <button class="j6n-close" type="button" data-j6n-modal-close aria-label="Fermer">✕</button>
+  </div>
+  <div class="j6n-modal__body">
+    @if (modificationErreur()) {
+      <div class="j6n-alert j6n-alert--danger" role="alert">
+        <p class="j6n-alert__body">{{ modificationErreur() }}</p>
+      </div>
+    }
+
+    <form class="j6n-stack" id="form-modifier-trajet" (ngSubmit)="modifier()">
+      <div class="j6n-field">
+        <label class="j6n-label" for="adresse-edition">Adresse de départ</label>
+        <input
+          class="j6n-input"
+          id="adresse-edition"
+          name="adresse-edition"
+          type="text"
+          required
+          [ngModel]="adresseEdition()"
+          (ngModelChange)="adresseEdition.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="horaire-depart-edition">Horaire de départ</label>
+        <input
+          class="j6n-input"
+          id="horaire-depart-edition"
+          name="horaire-depart-edition"
+          type="time"
+          required
+          [ngModel]="horaireEdition()"
+          (ngModelChange)="horaireEdition.set($event)"
+        />
+      </div>
+
+      <div class="j6n-field">
+        <label class="j6n-label" for="places-edition">Nombre de places</label>
+        <input
+          class="j6n-input"
+          id="places-edition"
+          name="places-edition"
+          type="number"
+          min="1"
+          required
+          [ngModel]="placesEdition()"
+          (ngModelChange)="placesEdition.set($event)"
+        />
+        <p class="j6n-hint">
+          Impossible de descendre en dessous du nombre de passagers déjà inscrits.
+        </p>
+      </div>
+    </form>
+  </div>
+  <div class="j6n-modal__footer">
+    <button class="j6n-btn j6n-btn--ghost" type="button" data-j6n-modal-close>Annuler</button>
+    <button
+      class="j6n-btn j6n-btn--pine"
+      type="submit"
+      form="form-modifier-trajet"
+      [disabled]="modificationEnCours()"
+    >
+      {{ modificationEnCours() ? 'Enregistrement…' : 'Enregistrer' }}
     </button>
   </div>
 </dialog>

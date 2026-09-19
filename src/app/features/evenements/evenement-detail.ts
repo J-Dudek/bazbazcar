@@ -9,6 +9,7 @@ import { Trajet } from '../../shared/models/trajet';
 import { Commentaire } from '../../shared/models/commentaire';
 
 const MODAL_PROPOSER = 'modal-proposer-trajet';
+const MODAL_MODIFIER = 'modal-modifier-trajet';
 
 type CommentaireAvecAuteur = Commentaire & { profiles: { prenom: string; nom: string } | null };
 interface Occupant {
@@ -28,6 +29,7 @@ export class EvenementDetail implements OnInit {
   protected readonly auth = inject(Auth);
 
   protected readonly modalProposer = MODAL_PROPOSER;
+  protected readonly modalModifier = MODAL_MODIFIER;
 
   readonly evenement = signal<Evenement | null>(null);
   readonly trajets = signal<TrajetAvecConducteur[]>([]);
@@ -42,6 +44,13 @@ export class EvenementDetail implements OnInit {
   readonly telephoneContact = signal('');
   readonly creationEnCours = signal(false);
   readonly creationErreur = signal<string | null>(null);
+
+  readonly trajetEnEdition = signal<TrajetAvecConducteur | null>(null);
+  readonly adresseEdition = signal('');
+  readonly horaireEdition = signal('');
+  readonly placesEdition = signal(1);
+  readonly modificationEnCours = signal(false);
+  readonly modificationErreur = signal<string | null>(null);
 
   readonly commentaires = signal<CommentaireAvecAuteur[]>([]);
   readonly nouveauCommentaire = signal('');
@@ -241,6 +250,44 @@ export class EvenementDetail implements OnInit {
     }
 
     j6n.toast('Trajet annulé.', { tone: 'success' });
+    await this.charger();
+  }
+
+  ouvrirEdition(trajet: TrajetAvecConducteur): void {
+    this.modificationErreur.set(null);
+    this.trajetEnEdition.set(trajet);
+    this.adresseEdition.set(trajet.adresse_depart);
+    this.horaireEdition.set(trajet.horaire_depart);
+    this.placesEdition.set(trajet.places_totales);
+    j6n.openModal(MODAL_MODIFIER);
+  }
+
+  async modifier(): Promise<void> {
+    this.modificationErreur.set(null);
+
+    const trajet = this.trajetEnEdition();
+    if (!trajet) {
+      return;
+    }
+
+    this.modificationEnCours.set(true);
+
+    const { error } = await this.supabase.rpc('modifier_trajet', {
+      p_trajet_id: trajet.id,
+      p_adresse_depart: this.adresseEdition(),
+      p_horaire_depart: this.horaireEdition(),
+      p_places_totales: this.placesEdition(),
+    });
+
+    this.modificationEnCours.set(false);
+
+    if (error) {
+      this.modificationErreur.set(error.message);
+      return;
+    }
+
+    j6n.closeModal(MODAL_MODIFIER);
+    j6n.toast('Trajet modifié.', { tone: 'success' });
     await this.charger();
   }
 
