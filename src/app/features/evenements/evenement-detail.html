@@ -38,6 +38,9 @@
           <article class="j6n-card">
             <p class="j6n-card__meta">Départ {{ trajet.horaire_depart.slice(0, 5) }}</p>
             <h3 class="j6n-card__title">{{ trajet.adresse_depart }}</h3>
+            <p class="j6n-muted">
+              Proposé par {{ trajet.profiles?.prenom }} {{ trajet.profiles?.nom }}
+            </p>
 
             <div class="j6n-stat">
               <span class="j6n-stat__value"

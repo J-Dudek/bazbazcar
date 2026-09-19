@@ -15,6 +15,7 @@ interface Occupant {
   prenom: string;
   nom: string;
 }
+type TrajetAvecConducteur = Trajet & { profiles: { prenom: string; nom: string } | null };
 
 @Component({
   selector: 'app-evenement-detail',
@@ -29,7 +30,7 @@ export class EvenementDetail implements OnInit {
   protected readonly modalProposer = MODAL_PROPOSER;
 
   readonly evenement = signal<Evenement | null>(null);
-  readonly trajets = signal<Trajet[]>([]);
+  readonly trajets = signal<TrajetAvecConducteur[]>([]);
   readonly mesInscriptions = signal<Set<string>>(new Set());
   readonly occupantsParTrajet = signal<Record<string, Occupant[]>>({});
   readonly loading = signal(true);
@@ -64,7 +65,7 @@ export class EvenementDetail implements OnInit {
       this.supabase.from('evenements').select('*').eq('id', this.evenementId).single(),
       this.supabase
         .from('trajets')
-        .select('*')
+        .select('*, profiles(prenom, nom)')
         .eq('evenement_id', this.evenementId)
         .order('horaire_depart', { ascending: true }),
       this.supabase.from('inscriptions').select('trajet_id').eq('passager_id', userId),
@@ -85,7 +86,7 @@ export class EvenementDetail implements OnInit {
     }
 
     this.evenement.set(evenementRes.data as Evenement);
-    this.trajets.set((trajetsRes.data ?? []) as Trajet[]);
+    this.trajets.set((trajetsRes.data ?? []) as TrajetAvecConducteur[]);
     this.mesInscriptions.set(
       new Set((inscriptionsRes.data ?? []).map((i) => i['trajet_id'] as string)),
     );
