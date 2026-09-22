@@ -20,13 +20,17 @@
     }
 
     <h2 class="j6n-card__title">Trajets proposés</h2>
-    <button
-      class="j6n-btn j6n-btn--pine j6n-btn--block"
-      type="button"
-      data-j6n-modal-open="modal-proposer-trajet"
-    >
-      Proposer un trajet
-    </button>
+    @if (estPasse()) {
+      <p class="j6n-hint">Cet événement est passé : consultation seule.</p>
+    } @else {
+      <button
+        class="j6n-btn j6n-btn--pine j6n-btn--block"
+        type="button"
+        data-j6n-modal-open="modal-proposer-trajet"
+      >
+        Proposer un trajet
+      </button>
+    }
 
     @if (trajets().length === 0) {
       <article class="j6n-card">
@@ -69,37 +73,49 @@
               </p>
             }
 
-            @if (estConducteur(trajet)) {
-              <button
-                class="j6n-btn j6n-btn--secondary j6n-btn--block"
-                type="button"
-                (click)="ouvrirEdition(trajet)"
-              >
-                Modifier mon trajet
-              </button>
-              <button
-                class="j6n-btn j6n-btn--ghost j6n-btn--block"
-                type="button"
-                (click)="annuler(trajet)"
-              >
-                Annuler mon trajet
-              </button>
-            } @else if (estInscrit(trajet)) {
-              <button
-                class="j6n-btn j6n-btn--secondary j6n-btn--block"
-                type="button"
-                (click)="quitter(trajet)"
-              >
-                Quitter ce trajet
-              </button>
-            } @else if (trajet.places_disponibles > 0) {
-              <button
-                class="j6n-btn j6n-btn--pine j6n-btn--block"
-                type="button"
-                (click)="rejoindre(trajet)"
-              >
-                Rejoindre
-              </button>
+            @if (estPasse()) {
+              @if (auth.profile()?.role === 'admin') {
+                <button
+                  class="j6n-btn j6n-btn--secondary j6n-btn--block"
+                  type="button"
+                  (click)="ouvrirEdition(trajet)"
+                >
+                  Modifier ce trajet
+                </button>
+              }
+            } @else {
+              @if (estConducteur(trajet)) {
+                <button
+                  class="j6n-btn j6n-btn--secondary j6n-btn--block"
+                  type="button"
+                  (click)="ouvrirEdition(trajet)"
+                >
+                  Modifier mon trajet
+                </button>
+                <button
+                  class="j6n-btn j6n-btn--ghost j6n-btn--block"
+                  type="button"
+                  (click)="annuler(trajet)"
+                >
+                  Annuler mon trajet
+                </button>
+              } @else if (estInscrit(trajet)) {
+                <button
+                  class="j6n-btn j6n-btn--secondary j6n-btn--block"
+                  type="button"
+                  (click)="quitter(trajet)"
+                >
+                  Quitter ce trajet
+                </button>
+              } @else if (trajet.places_disponibles > 0) {
+                <button
+                  class="j6n-btn j6n-btn--pine j6n-btn--block"
+                  type="button"
+                  (click)="rejoindre(trajet)"
+                >
+                  Rejoindre
+                </button>
+              }
             }
           </article>
         }

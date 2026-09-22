@@ -199,6 +199,14 @@ export class EvenementDetail implements OnInit {
     this.commentaires.set((data ?? []) as CommentaireAvecAuteur[]);
   }
 
+  estPasse(): boolean {
+    const dateEvenement = this.evenement()?.date_evenement;
+    if (!dateEvenement) {
+      return false;
+    }
+    return dateEvenement < new Date().toISOString().slice(0, 10);
+  }
+
   estConducteur(trajet: Trajet): boolean {
     return trajet.conducteur_id === this.auth.session()?.user.id;
   }

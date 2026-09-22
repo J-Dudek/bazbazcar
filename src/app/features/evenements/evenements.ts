@@ -29,6 +29,18 @@ export class Evenements implements OnInit {
       return;
     }
 
-    this.evenements.set(data as Evenement[]);
+    this.evenements.set(this.trierParProximite(data as Evenement[]));
+  }
+
+  private trierParProximite(evenements: Evenement[]): Evenement[] {
+    const aujourdhui = new Date().toISOString().slice(0, 10);
+    const aVenir = evenements
+      .filter((e) => e.date_evenement >= aujourdhui)
+      .sort((a, b) => a.date_evenement.localeCompare(b.date_evenement));
+    const passes = evenements
+      .filter((e) => e.date_evenement < aujourdhui)
+      .sort((a, b) => b.date_evenement.localeCompare(a.date_evenement));
+
+    return [...aVenir, ...passes];
   }
 }
