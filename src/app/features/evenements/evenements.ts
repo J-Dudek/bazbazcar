@@ -32,6 +32,10 @@ export class Evenements implements OnInit {
     this.evenements.set(this.trierParProximite(data as Evenement[]));
   }
 
+  estPasse(evenement: Evenement): boolean {
+    return evenement.date_evenement < new Date().toISOString().slice(0, 10);
+  }
+
   private trierParProximite(evenements: Evenement[]): Evenement[] {
     const aujourdhui = new Date().toISOString().slice(0, 10);
     const aVenir = evenements

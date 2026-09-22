@@ -15,6 +15,9 @@
     <div class="j6n-grid">
       @for (evenement of evenements(); track evenement.id) {
         <a class="j6n-card j6n-card--interactive" [routerLink]="['/evenements', evenement.id]">
+          @if (estPasse(evenement)) {
+            <span class="j6n-badge j6n-badge--danger">Terminé</span>
+          }
           <p class="j6n-card__meta">{{ evenement.date_evenement | date: 'EEEE d MMMM y' }}</p>
           <h2 class="j6n-card__title">{{ evenement.titre }}</h2>
           <p class="j6n-muted">{{ evenement.lieu }}</p>
