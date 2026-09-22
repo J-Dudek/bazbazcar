@@ -7,7 +7,7 @@ declare const j6n: {
   toast(
     message: string,
     options?: { tone?: 'success' | 'danger' | 'warning'; duration?: number },
-  ): void;
+  ): HTMLElement;
   openModal(id: string): void;
   closeModal(id: string): void;
 };

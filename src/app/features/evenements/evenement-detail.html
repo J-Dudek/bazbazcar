@@ -73,17 +73,7 @@
               </p>
             }
 
-            @if (estPasse()) {
-              @if (auth.profile()?.role === 'admin') {
-                <button
-                  class="j6n-btn j6n-btn--secondary j6n-btn--block"
-                  type="button"
-                  (click)="ouvrirEdition(trajet)"
-                >
-                  Modifier ce trajet
-                </button>
-              }
-            } @else {
+            @if (!estPasse()) {
               @if (estConducteur(trajet)) {
                 <button
                   class="j6n-btn j6n-btn--secondary j6n-btn--block"

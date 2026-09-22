@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import { App } from './app';
 
 describe('App', () => {
@@ -8,7 +9,9 @@ describe('App', () => {
     vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      // `enabled: false` : SwUpdate (PwaUpdate) a besoin du provider pour
+      // s'injecter, mais on ne veut pas d'un vrai service worker dans les tests.
+      providers: [provideRouter([]), provideServiceWorker('ngsw-worker.js', { enabled: false })],
     }).compileComponents();
   });
 
