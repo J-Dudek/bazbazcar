@@ -42,6 +42,14 @@ create table inscriptions (
   unique (trajet_id, passager_id) -- un membre ne peut pas s'inscrire deux fois au même trajet
 );
 
+-- Depuis le 30/10/2026, Supabase n'accorde plus automatiquement l'accès Data
+-- API aux nouvelles tables de `public` : sans GRANT explicite, une base neuve
+-- (`supabase db reset`, branche de preview, nouveau projet) les rendrait
+-- inaccessibles via supabase-js. Pas de grant à `anon` : aucune policy RLS ne
+-- lui ouvre ces tables, toute l'app passe par un utilisateur connecté.
+grant select, insert, update, delete on public.profiles, public.evenements, public.trajets, public.inscriptions to authenticated;
+grant select, insert, update, delete on public.profiles, public.evenements, public.trajets, public.inscriptions to service_role;
+
 -- Un profil est créé automatiquement à l'inscription (nom/prénom/email
 -- transmis via `options.data` dans supabase-js signUp, cf. AuthService).
 create function public.handle_new_user()

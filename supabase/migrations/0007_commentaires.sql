@@ -9,6 +9,10 @@ create table commentaires (
 
 alter table commentaires enable row level security;
 
+-- Grants explicites (cf. 0001) : plus accordés par défaut sur les nouvelles tables.
+grant select, insert, update, delete on public.commentaires to authenticated;
+grant select, insert, update, delete on public.commentaires to service_role;
+
 create index commentaires_evenement_id_idx on commentaires (evenement_id);
 create index commentaires_auteur_id_idx on commentaires (auteur_id);
 
