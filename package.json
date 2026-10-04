@@ -28,7 +28,7 @@
     "@angular/core": "^22.1.0",
     "@angular/forms": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
-    "@angular/router": "^22.1.0",
+    "@angular/router": "^22.2.0",
     "@angular/service-worker": "^22.1.6",
     "@supabase/supabase-js": "^2.116.0",
     "design-j6n": "^0.1.7",
