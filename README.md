@@ -1,14 +1,19 @@
-# bazbazcar
+# bazbazcar — template de covoiturage associatif
 
-Application de covoiturage pour une association loi 1901 : les membres proposent et rejoignent des trajets vers les événements créés par les administrateurs. Angular (standalone components, signals) côté client, Supabase (Postgres, Auth, Row Level Security, Realtime, Edge Functions) côté serveur, [design-j6n](https://github.com/J-Dudek/design-j6n) pour l'UI. Pas de backend applicatif custom — voir [Stack technique](#stack-technique).
+Application de covoiturage clé en main pour une association loi 1901 : les membres proposent et rejoignent des trajets vers les événements créés par les administrateurs. Angular (standalone components, signals) côté client, Supabase (Postgres, Auth, Row Level Security, Realtime, Edge Functions) côté serveur, [design-j6n](https://github.com/J-Dudek/design-j6n) pour l'UI. Pas de backend applicatif custom — voir [Stack technique](#stack-technique).
+
+**Ce dépôt est pensé comme un template.** `bazbazcar` est l'instance de référence ; pour l'adapter à ton association, il suffit de remplacer **le nom** et **le logo**, puis de brancher tes propres comptes Supabase / Resend / Netlify. Aucune ligne de logique métier à toucher.
+
+> 👉 Parcours complet : [Utiliser ce projet comme template](#utiliser-ce-projet-comme-template) (une commande + tes visuels) → [Mettre en ligne pour ton association](#mettre-en-ligne-pour-ton-association) (comptes et déploiement, ~1 h).
 
 ## Sommaire
 
 - [Fonctionnalités](#fonctionnalités)
+- [Utiliser ce projet comme template](#utiliser-ce-projet-comme-template)
 - [Stack technique](#stack-technique)
 - [Lancer le projet en local](#lancer-le-projet-en-local)
 - [Qualité de code — lint, format, accessibilité](#qualité-de-code--lint-format-accessibilité)
-- [Reproduire le projet avec d'autres comptes](#reproduire-le-projet-avec-dautres-comptes)
+- [Mettre en ligne pour ton association](#mettre-en-ligne-pour-ton-association)
 - [Variables d'environnement — récapitulatif](#variables-denvironnement--récapitulatif)
 - [Déploiement](#déploiement)
 - [Structure du projet](#structure-du-projet)
@@ -42,6 +47,67 @@ Application de covoiturage pour une association loi 1901 : les membres proposent
 - Thème clair/sombre/automatique, persistant par appareil
 - Installable : prompt natif sur Chrome/Edge/Android, mode d'emploi dédié sur iOS (Safari n'expose aucune API d'installation) ; proposition différée 30 jours après un refus
 - Détection de nouvelle version en tâche de fond, avec invite à recharger plutôt qu'un rechargement forcé — pour ne pas perdre un formulaire en cours de saisie
+
+## Utiliser ce projet comme template
+
+### 1. Récupérer le code
+
+Sur GitHub : bouton **Use this template → Create a new repository** (ou un fork), puis cloner ton nouveau dépôt. L'historique de `bazbazcar` n'est pas nécessaire.
+
+### 2. Remplacer le nom et le slogan — `npm run init-template`
+
+```bash
+npm run init-template
+```
+
+Le script pose trois questions et fait tout le « rechercher / remplacer » à ta place :
+
+| Question | Exemple | Où ça va |
+|---|---|---|
+| **Identifiant technique** — minuscules, chiffres, tirets | `covoitjazz` | package npm, projet Angular, dossier de build Netlify, `project_id` Supabase local, compte de démo `admin@covoitjazz.local` |
+| **Nom affiché** — majuscules, espaces, apostrophes permises | `Covoit' Jazz` | onglet, header, popin d'installation, manifeste PWA, emails d'authentification et de notification |
+| **Slogan** — facultatif | `le covoiturage du jazz club` | `og:title`/`og:description`, manifeste PWA, `<title>` du logo SVG |
+
+Le nom affiché est échappé selon le format de chaque fichier (apostrophes doublées en SQL, JSON valide dans le manifeste…). Les caractères `< > & "` sont refusés.
+
+- **Prévisualiser** sans rien écrire : `npm run init-template -- --dry-run`
+- **Sans questions** (CI, script) : `node scripts/init-template.mjs --id covoitjazz --nom "Covoit' Jazz" --slogan "le covoiturage du jazz club"`
+- **Une seule fois** : le script s'arrête s'il ne trouve plus `bazbazcar`, signe que le template est déjà initialisé. Pour recommencer : `git checkout .` puis relancer.
+
+> ⚠️ Le script **modifie les migrations SQL** (textes des emails de notification). C'est sans risque sur un projet Supabase **neuf**, où elles seront jouées pour la première fois, mais **ne jamais le lancer sur une instance déjà en production**. Là, tout changement passe par une **nouvelle** migration qui redéfinit les fonctions concernées.
+
+Le README n'est pas réécrit (il continue de décrire l'instance de référence), à l'exception de l'adresse du compte de démo.
+
+### 3. Remplacer le logo
+
+Tous les visuels sont dans `public/` ; garder **les mêmes noms de fichiers et dimensions**, aucune référence de code n'est alors à modifier.
+
+| Fichier | Dimensions | Usage |
+|---|---|---|
+| `logo.svg` | libre (ratio ≈ 0,9 : 1 conseillé) | logo du header et filigrane en fond de page |
+| `favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `favicon-48x48.png` | 16 / 16 / 32 / 48 px | onglet du navigateur |
+| `apple-touch-icon.png` | 180 × 180 | écran d'accueil iOS |
+| `android-chrome-192x192.png`, `android-chrome-512x512.png` | 192 / 512 px | icônes PWA (Android, Chrome, Edge) |
+| `maskable-icon-512.png` | 512 × 512, logo dans le cercle central (~80 %) | icône PWA adaptative Android — vérifier sur [maskable.app](https://maskable.app) |
+| `og-image.jpg` | 1200 × 630 | aperçu lors d'un partage de lien (WhatsApp, réseaux sociaux…) |
+
+`logo-256/512/1024.png` et `logo_circle_transparent.png` ne sont référencés nulle part : ce sont les sources ayant servi à générer les icônes, à remplacer ou supprimer librement. Un générateur comme [realfavicongenerator.net](https://realfavicongenerator.net) produit l'essentiel du jeu d'icônes à partir d'une seule image.
+
+Si la largeur/hauteur du logo change sensiblement, ajuster `width`/`height` de l'`<img class="brand-logo">` dans `src/app/shared/ui/header.html`.
+
+### 4. (Optionnel) Couleurs
+
+- **Interface** : le thème vient de [design-j6n](https://github.com/J-Dudek/design-j6n) (variables `--j6n-*`) ; les surcharger dans `src/styles.css` plutôt que de modifier la librairie.
+- **Barre du navigateur / écran de lancement PWA** : `theme-color` dans `src/index.html`, `theme_color` et `background_color` dans `public/site.webmanifest`.
+- **Emails** : couleurs codées en dur (styles inline, imposés par les clients mail) dans `supabase/templates/*.html`.
+
+### 5. Vérifier
+
+```bash
+npm run setup && npm start
+```
+
+Contrôler l'onglet, le header, le filigrane, la popin d'installation, puis un email de confirmation dans Mailpit (`http://127.0.0.1:54324`). Une fois satisfait : [Mettre en ligne pour ton association](#mettre-en-ligne-pour-ton-association).
 
 ## Stack technique
 
@@ -140,7 +206,7 @@ npm start
 
 ```bash
 npm test               # tests unitaires (Vitest)
-npm run build          # build de production dans dist/bazbazcar-app/browser
+npm run build          # build de production dans dist/<identifiant>-app/browser
 npm run watch          # build de dev en continu
 ```
 
@@ -162,9 +228,9 @@ npm run dev           # ng serve + relance du lint à chaque modification, dans 
 - **Éditeur (VS Code)** : ouvrir le projet avec les extensions recommandées (`.vscode/extensions.json` — ESLint + Prettier) donne un retour immédiat en tapant (soulignés, panneau *Problems*) et corrige automatiquement à l'enregistrement (`.vscode/settings.json`).
 - **Terminal** : `npm run dev` lance `ng serve` et un watcher lint (`npm run lint:watch`, via `chokidar`) en parallèle dans le même terminal, avec un préfixe de couleur par flux.
 
-## Reproduire le projet avec d'autres comptes
+## Mettre en ligne pour ton association
 
-Cette section explique comment relancer entièrement le projet (frontend + backend + emails) avec de nouveaux comptes Supabase/Resend/Netlify — utile pour un fork, une migration, ou un environnement de test séparé.
+Cette section explique comment lancer ta propre instance (frontend + backend + emails) avec tes comptes Supabase/Resend/Netlify — tous utilisables en offre gratuite pour une association de taille modeste. À faire **après** la [personnalisation](#utiliser-ce-projet-comme-template). Valable aussi pour une migration ou un environnement de test séparé.
 
 ### 1. Créer le projet Supabase
 
@@ -237,7 +303,7 @@ Ces fonctions envoient un email par destinataire (jamais d'adresses visibles ent
 6. Enregistrer l'adresse d'expéditeur des notifications dans le Vault, avec **le même domaine vérifié** que le SMTP de l'étape 3 :
 
 ```sql
-select vault.create_secret('bazbazcar <notifications@tondomaine.fr>', 'email_expediteur');
+select vault.create_secret('Nom de ton asso <notifications@tondomaine.fr>', 'email_expediteur');
 ```
 
 Sans ce secret, les notifications partent de `onboarding@resend.dev` (expéditeur de test de Resend) : domaine partagé, non aligné sur celui du site, donc spam quasi garanti — à réserver au dev.
@@ -257,11 +323,11 @@ Les gabarits par défaut de Supabase sont en anglais, avec un objet générique 
 
 | Fichier | Dashboard (**Authentication → Emails → Templates**) | Objet à saisir |
 |---|---|---|
-| `confirmation.html` | Confirm sign up | `Confirme ton adresse email — bazbazcar` |
-| `recovery.html` | Reset password | `Réinitialise ton mot de passe — bazbazcar` |
-| `invite.html` | Invite user | `Invitation à rejoindre bazbazcar` |
+| `confirmation.html` | Confirm sign up | `Confirme ton adresse email — <nom de l'app>` |
+| `recovery.html` | Reset password | `Réinitialise ton mot de passe — <nom de l'app>` |
+| `invite.html` | Invite user | `Invitation à rejoindre <nom de l'app>` |
 
-Pour chacun : coller le contenu du fichier dans *Message body* (mode source) et l'objet ci-dessus dans *Subject heading*, puis enregistrer. Tester immédiatement avec « Mot de passe oublié » sur son propre compte. Ces mêmes fichiers sont référencés dans `supabase/config.toml`, donc le stack local (Mailpit) les utilise après un `npm run supabase:stop && npm run supabase:start`.
+Les objets à jour sont aussi dans `supabase/config.toml` (sections `[auth.email.template.*]`). Pour chacun : coller le contenu du fichier dans *Message body* (mode source) et l'objet ci-dessus dans *Subject heading*, puis enregistrer. Tester immédiatement avec « Mot de passe oublié » sur son propre compte. Ces mêmes fichiers sont référencés dans `supabase/config.toml`, donc le stack local (Mailpit) les utilise après un `npm run supabase:stop && npm run supabase:start`.
 
 > ⚠️ Ne pas utiliser `supabase config push` pour les publier : la commande applique **toute** la config Auth de `config.toml` (dont `site_url` et les redirections, réglés pour le local) au projet distant, pas seulement les gabarits.
 
@@ -287,7 +353,7 @@ Voir [Déploiement](#déploiement) ci-dessous.
 | GitHub Actions (si CI ajoutée plus tard — Settings → Secrets and variables → Actions) | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Idem | Nécessaire seulement si un workflow build/teste le projet ; le déploiement lui-même passe par l'intégration Git native de Netlify, pas par GitHub Actions |
 | Supabase — secrets Edge Functions | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | — | **Injectées automatiquement** par Supabase, rien à faire |
 | Supabase — Vault (SQL) | `resend_api_key` | Clé API Resend | `select vault.create_secret('...', 'resend_api_key');` dans le SQL Editor |
-| Supabase — Vault (SQL) | `email_expediteur` | Expéditeur des notifications, ex. `bazbazcar <notifications@tondomaine.fr>` (domaine vérifié chez Resend) | `select vault.create_secret('...', 'email_expediteur');` dans le SQL Editor |
+| Supabase — Vault (SQL) | `email_expediteur` | Expéditeur des notifications, ex. `Nom de ton asso <notifications@tondomaine.fr>` (domaine vérifié chez Resend) | `select vault.create_secret('...', 'email_expediteur');` dans le SQL Editor |
 | Supabase — Auth SMTP (dashboard) | Host/port/user/password Resend | — | **Authentication → Emails → SMTP Settings** |
 
 **Ce qui ne doit jamais apparaître dans le repo** : la clé `service_role` Supabase, la clé API Resend, tout mot de passe. Le `.gitignore` exclut déjà les fichiers `environment*.ts` générés — un coup d'œil au diff sur ces zones avant chaque commit reste une bonne habitude.

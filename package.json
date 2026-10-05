@@ -13,6 +13,7 @@
     "lint:watch": "chokidar \"src/**/*.{ts,html}\" -c \"npm run lint\" --initial",
     "dev": "concurrently -n ng,lint -c \"blue,yellow\" \"npm:start\" \"npm:lint:watch\"",
     "setup": "node setup-local.mjs",
+    "init-template": "node scripts/init-template.mjs",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
