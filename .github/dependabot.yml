@@ -1,0 +1,26 @@
+# Les paquets @angular/* doivent toujours monter ensemble (peer dependencies
+# en version exacte) : une PR qui n'en bumpe qu'un casse `npm ci` et le build
+# Netlify. On les regroupe donc dans une seule PR, et on limite le bruit au
+# reste des dépendances avec une PR groupée hebdomadaire.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      angular:
+        patterns:
+          - '@angular/*'
+          - '@angular-devkit/*'
+      dev-dependencies:
+        dependency-type: development
+        exclude-patterns:
+          - '@angular/*'
+          - '@angular-devkit/*'
+      dependencies:
+        dependency-type: production
+        exclude-patterns:
+          - '@angular/*'

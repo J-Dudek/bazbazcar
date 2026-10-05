@@ -226,7 +226,7 @@ npm run dev           # ng serve + relance du lint à chaque modification, dans 
 
 **Retour en direct pendant le dev** :
 - **Éditeur (VS Code)** : ouvrir le projet avec les extensions recommandées (`.vscode/extensions.json` — ESLint + Prettier) donne un retour immédiat en tapant (soulignés, panneau *Problems*) et corrige automatiquement à l'enregistrement (`.vscode/settings.json`).
-- **Terminal** : `npm run dev` lance `ng serve` et un watcher lint (`npm run lint:watch`, via `chokidar`) en parallèle dans le même terminal, avec un préfixe de couleur par flux.
+- **Terminal** : `npm run dev` lance `ng serve` et un watcher lint (`npm run lint:watch`, `scripts/lint-watch.mjs`, sans dépendance) en parallèle dans le même terminal, avec un préfixe de couleur par flux.
 
 ## Mettre en ligne pour ton association
 
